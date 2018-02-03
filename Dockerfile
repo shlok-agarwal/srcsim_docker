@@ -144,10 +144,11 @@ EXPOSE 11611
 EXPOSE 11711
 EXPOSE 5900
 
-ADD scripts/startup.sh /home/whrl/startup.sh
-RUN sudo chmod +x /home/whrl/startup.sh
+# ADD scripts/startup.sh /home/whrl/startup.sh
+# RUN sudo chmod +x /home/whrl/startup.sh
 
 # Run command that should be the entry poitn to our code
-CMD bin/bash -c "/home/whrl/startup.sh"
+# CMD bin/bash -c "/home/whrl/startup.sh"
 # CMD x11vnc -create -forever -usepw -repeat
 # CMD bin/bash -c "source ~/.bashrc && roslaunch val_bringup whrl.launch"
+CMD /bin/bash -c "source ~/.bashrc && roslaunch srcsim finals.launch"
