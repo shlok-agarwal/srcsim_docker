@@ -54,4 +54,4 @@ docker run --rm --name srcsim \
   --net=srcsim \
   --ip=192.168.2.10 \
   ${DOCKER_GPU_PARAMS} \
-  srcsim0.9 
+  srcsim:0.9 
