@@ -88,9 +88,9 @@ RUN sudo bash -c 'echo "@ros - rtprio 99" > /etc/security/limits.d/ros-rtprio.co
 RUN sudo groupadd ros
 RUN sudo usermod -a -G ros whrl
 
-RUN wget -P /tmp/ http://gazebosim.org/distributions/srcsim/valkyrie_controller.tar.gz
-RUN tar -xvf /tmp/valkyrie_controller.tar.gz -C $HOME
-RUN rm /tmp/valkyrie_controller.tar.gz
+RUN wget -P /tmp/ https://osrf-distributions.s3.amazonaws.com/srcsim/valkyrie_controller.0.8.2.tar.gz 
+RUN tar -xvf /tmp/valkyrie_controller.0.8.2.tar.gz -C $HOME
+RUN rm /tmp/valkyrie_controller.0.8.2.tar.gz
 
 RUN /bin/bash -c "echo 'export ROS_MASTER_URI=http://192.168.2.10:11311' >> ~/.bashrc"
 RUN /bin/bash -c "echo 'export ROS_IP=192.168.2.10' >> ~/.bashrc"                  
@@ -102,19 +102,22 @@ RUN tar -xvf /tmp/default.tar.gz -C $HOME/.gazebo/models --strip 1
 RUN rm /tmp/default.tar.gz
 
 RUN source /opt/nasa/indigo/setup.bash
-RUN /bin/bash -c "source /opt/nasa/indigo/setup.bash && \
-		  roslaunch ihmc_valkyrie_ros valkyrie_warmup_gradle_cache.launch"
+#RUN /bin/bash -c "source /opt/nasa/indigo/setup.bash && \
+#		  roslaunch ihmc_valkyrie_ros valkyrie_warmup_gradle_cache.launch"
 
 # Clone additional repos that are required for our code
 #RUN git clone https://github.com/ninja777/humanoid_navigation.git ~/indigo_ws/src/humanoid_navigation
 #RUN cd ~/indigo_ws/src/humanoid_navigation && git checkout indigo-devel
 RUN mkdir ~/indigo_ws/src/ihmc_repos
 RUN git clone https://github.com/WPI-Humanoid-Robotics-Lab/ihmc_ros_core.git ~/indigo_ws/src/ihmc_repos/ihmc_ros_core
-RUN cd ~/indigo_ws/src/ihmc_repos/ihmc_ros_core && git checkout 0.9.2
+RUN cd ~/indigo_ws/src/ihmc_repos/ihmc_ros_core && git checkout 0.8.2
 RUN git clone https://github.com/ihmcrobotics/ihmc_valkyrie_ros.git ~/indigo_ws/src/ihmc_repos/ihmc_valkyrie_ros
-RUN cd ~/indigo_ws/src/ihmc_repos/ihmc_valkyrie_ros && git checkout 0.9.0
+RUN cd ~/indigo_ws/src/ihmc_repos/ihmc_valkyrie_ros && git checkout 0.8.2
 RUN git clone https://github.com/ihmcrobotics/ihmc-ros-control.git ~/indigo_ws/src/ihmc_repos/ihmc_ros_control
 RUN cd ~/indigo_ws/src/ihmc_repos/ihmc_ros_control && git checkout 0.5.0
+
+RUN /bin/bash -c "source ~/indigo_ws/devel/setup.bash && \
+                  roslaunch ihmc_valkyrie_ros valkyrie_warmup_gradle_cache.launch"
 
 # Make ssh dir for gitlab deploy key and set up repo
 # RUN sudo mkdir /home/whrl/.ssh/
