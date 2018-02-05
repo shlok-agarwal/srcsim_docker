@@ -25,8 +25,7 @@ Docker images for srcsim
 7. To run code on docker image add the following 2 variables to ~/.bashrc
 	```bash
 	export ROS_MASTER_URI=http://192.168.2.10:11311
-        export ROS_IP=192.168.0.1 # Confirm this from ifconfig results
-        rostopic list
+	export ROS_IP=192.168.0.1 # Confirm this from ifconfig results
 	```
 
 
