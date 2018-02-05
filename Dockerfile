@@ -106,8 +106,8 @@ RUN /bin/bash -c "source /opt/nasa/indigo/setup.bash && \
 		  roslaunch ihmc_valkyrie_ros valkyrie_warmup_gradle_cache.launch"
 
 # Clone additional repos that are required for our code
-RUN git clone https://github.com/ninja777/humanoid_navigation.git ~/indigo_ws/src/humanoid_navigation
-RUN cd ~/indigo_ws/src/humanoid_navigation && git checkout indigo-devel
+#RUN git clone https://github.com/ninja777/humanoid_navigation.git ~/indigo_ws/src/humanoid_navigation
+#RUN cd ~/indigo_ws/src/humanoid_navigation && git checkout indigo-devel
 RUN mkdir ~/indigo_ws/src/ihmc_repos
 RUN git clone https://github.com/WPI-Humanoid-Robotics-Lab/ihmc_ros_core.git ~/indigo_ws/src/ihmc_repos/ihmc_ros_core
 RUN cd ~/indigo_ws/src/ihmc_repos/ihmc_ros_core && git checkout 0.9.2
