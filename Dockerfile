@@ -21,6 +21,8 @@ ENV HOME /home/whrl
 RUN sudo apt-get -y update && sudo apt-get install -y wget
 # && sudo rm -rf /var/lib/apt/lists/
 
+RUN rosdep update 
+
 # Install srcsim and Gazebo7
 RUN /bin/bash -c "echo 'source /opt/ros/indigo/setup.bash' >> ~/.bashrc"
 RUN sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
@@ -101,13 +103,8 @@ RUN mkdir -p $HOME/.gazebo/models
 RUN tar -xvf /tmp/default.tar.gz -C $HOME/.gazebo/models --strip 1
 RUN rm /tmp/default.tar.gz
 
-RUN source /opt/nasa/indigo/setup.bash
-RUN /bin/bash -c "source /opt/nasa/indigo/setup.bash && \
-		  roslaunch ihmc_valkyrie_ros valkyrie_warmup_gradle_cache.launch"
 
-# Clone additional repos that are required for our code
-#RUN git clone https://github.com/ninja777/humanoid_navigation.git ~/indigo_ws/src/humanoid_navigation
-#RUN cd ~/indigo_ws/src/humanoid_navigation && git checkout indigo-devel
+# Clone ihmc repos locally
 RUN mkdir ~/indigo_ws/src/ihmc_repos
 RUN git clone https://github.com/WPI-Humanoid-Robotics-Lab/ihmc_ros_core.git ~/indigo_ws/src/ihmc_repos/ihmc_ros_core
 RUN cd ~/indigo_ws/src/ihmc_repos/ihmc_ros_core && git checkout 0.9.2
@@ -116,27 +113,15 @@ RUN cd ~/indigo_ws/src/ihmc_repos/ihmc_valkyrie_ros && git checkout 0.9.0
 RUN git clone https://github.com/ihmcrobotics/ihmc-ros-control.git ~/indigo_ws/src/ihmc_repos/ihmc_ros_control
 RUN cd ~/indigo_ws/src/ihmc_repos/ihmc_ros_control && git checkout 0.5.0
 
-# Make ssh dir for gitlab deploy key and set up repo
-# RUN sudo mkdir /home/whrl/.ssh/
-# ADD ssh/id_rsa /home/whrl/.ssh/id_rsa
-# RUN sudo chmod 400 /home/whrl/.ssh/id_rsa
-# RUN sudo chown whrl:whrl /home/whrl/.ssh -R
-# RUN sudo touch /home/whrl/.ssh/known_hosts
-# RUN sudo /bin/sh -c "ssh-keyscan gitlab.com >> /home/whrl/.ssh/known_hosts"
-# RUN git clone -b Final2Develop --single-branch git@gitlab.com:whrl/space_robotics_challenge.git ~/indigo_ws/src/space_robotics_challenge
-# RUN cd ~/indigo_ws/src/space_robotics_challenge && git submodule update --init --recursive
-
-# Enable multicast here, atm it doesn't work
-#RUN sudo sh -c "echo 0 >/proc/sys/net/ipv4/icmp_echo_ignore_broadcasts"
-#RUN sudo service procps restart
-
 # Compile the code
 RUN /bin/bash -c "source ~/.bashrc && cd ~/indigo_ws && sudo rm -rf build devel && catkin_make"
 RUN sudo chown -R whrl:whrl ~/indigo_ws
 
-#RUN bash -c 'echo "if ! pidof -x \"icewm\" > /dev/null; then nohup icewm &>> ~/icewm.log & fi" >> ~/.bashrc'
-#RUN bash -c 'echo "export IS_FIELD=true" >> ~/.bashrc'
+# run warmup gradle to download most of the files required for ihmc controllers
+RUN /bin/bash -c "source ~/indigo_ws/devel/setup.bash && \
+                  roslaunch ihmc_valkyrie_ros valkyrie_warmup_gradle_cache.launch"
 
+# This might not be required anymore
 EXPOSE 8080
 EXPOSE 8000 
 EXPOSE 11311
@@ -144,11 +129,5 @@ EXPOSE 11611
 EXPOSE 11711
 EXPOSE 5900
 
-# ADD scripts/startup.sh /home/whrl/startup.sh
-# RUN sudo chmod +x /home/whrl/startup.sh
-
 # Run command that should be the entry poitn to our code
-# CMD bin/bash -c "/home/whrl/startup.sh"
-# CMD x11vnc -create -forever -usepw -repeat
-# CMD bin/bash -c "source ~/.bashrc && roslaunch val_bringup whrl.launch"
 CMD /bin/bash -c "source ~/.bashrc && roslaunch srcsim finals.launch"
