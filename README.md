@@ -12,6 +12,7 @@ Docker images for srcsim
 	```bash
 	git clone https://github.com/WPI-Humanoid-Robotics-Lab/srcsim_docker.git
 	cd srcsim_docker
+	git checkout 0.9.0
 	docker build -t srcsim0.9 .
 	```
 5. run the docker image
