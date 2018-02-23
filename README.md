@@ -7,7 +7,7 @@ Docker images for srcsim
 	```bash
 	docker network create --subnet 192.168.1.0/16 --driver bridge srcsim
 	```
-3. Install nvidia-docker plugin `https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-1.0)` 
+3. Install [nvidia-docker plugin](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-1.0)) 
 4. Run the script to pull docker image and run the container
 	```bash
 	bash run_srcsim_docker0.9.bash
